@@ -2,11 +2,6 @@ pipeline {
     agent any
 
     stages{
-        stage("Cleaning"){
-            steps{
-                deleteDir()
-            }
-        }
         stage('Verify Terraform') {
             steps {
                 sh 'terraform --version'
@@ -14,13 +9,10 @@ pipeline {
         }
         stage('Terraform init') {
             steps {
-                sh 'terraform init'
-            }
-        }
-        stage('Debug') {
-            steps {
-                sh 'pwd'
-                sh 'ls -R'
+                withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', 
+                                   credentialsId: 'aws-global-creds']]) {
+                    sh 'terraform init' 
+                }
             }
         }
         stage('Terraform plan') {
@@ -30,10 +22,10 @@ pipeline {
         }
         stage('Terraform apply') {
             steps {
-                sh 'terraform apply'
+                sh 'terraform apply -auto-approve'
             }
         }
-        stage('Complete pipelie') {
+        stage('Complete pipeline') {
             steps {
                 sh 'echo "Completed"'
             }
