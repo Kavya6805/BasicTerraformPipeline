@@ -17,6 +17,12 @@ pipeline {
                 sh 'terraform init'
             }
         }
+        stage('Debug') {
+            steps {
+                sh 'pwd'
+                sh 'ls -R'
+            }
+        }
         stage('Terraform plan') {
             steps {
                 sh 'terraform plan'
