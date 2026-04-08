@@ -16,19 +16,30 @@ pipeline {
             }
         }
         stage('Terraform plan') {
-            steps {
-                sh 'terraform plan'
+           steps {
+                withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', 
+                                   credentialsId: 'aws-global-creds']]) {
+                    sh 'terraform plan' 
+                }
             }
         }
         stage('Terraform apply') {
             steps {
-                sh 'terraform apply -auto-approve'
+                withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', 
+                                   credentialsId: 'aws-global-creds']]) {
+                    sh 'terraform apply -auto-approve'
+                }
             }
         }
         stage('Complete pipeline') {
             steps {
                 sh 'echo "Completed"'
             }
+        }
+    }
+    post{
+        always{
+            deleteDir()
         }
     }
 }
