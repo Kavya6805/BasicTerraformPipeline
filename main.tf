@@ -2,6 +2,14 @@ provider "aws" {
     region = "ap-south-1"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "terraform-state-file-stroage-v1"
+    key    = "basiterraformpipeline.tf"
+    region = "ap-south-1"
+  }
+}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 

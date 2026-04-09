@@ -21,6 +21,7 @@ pipeline {
                                    credentialsId: 'aws-global-creds']]) {
                     sh 'terraform plan' 
                 }
+                input message: 'Do you want to proceed to the next stage?'
             }
         }
         stage('Terraform apply') {
