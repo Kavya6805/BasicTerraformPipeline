@@ -2,6 +2,19 @@ pipeline {
     agent any
 
     stages{
+        stage('Verify Terraform') {
+            steps {
+                sh 'terraform --version'
+            }
+        }
+        stage('Terraform init') {
+            steps {
+                withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', 
+                                   credentialsId: 'aws-global-creds']]) {
+                    sh 'terraform init' 
+                }
+            }
+        }
         stage('Terraform destroy') {
            steps {
                 withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', 
