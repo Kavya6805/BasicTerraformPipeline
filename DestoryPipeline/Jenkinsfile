@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    stages{
+        stage('Terraform destroy') {
+           steps {
+                withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', 
+                                   credentialsId: 'aws-global-creds']]) {
+                    sh 'terraform destroy -auto-approve' 
+                }
+            }
+        }
+    }
+    post{
+        always{
+            deleteDir()
+        }
+    }
+}
